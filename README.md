@@ -1,5 +1,5 @@
 
-# SMS（Student Management System的缩写）
+# OEMS（Student Overseas Study and Exchange Management System的缩写）
 
 ## 内置功能
 
