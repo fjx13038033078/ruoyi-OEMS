@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.oversea.mapper.UniversityMapper">
+
+    <!-- 结果映射 -->
+    <resultMap type="University" id="UniversityResult">
+        <id property="universityId" column="university_id"/>
+        <result property="universityName" column="university_name"/>
+        <result property="country" column="country"/>
+    </resultMap>
+
+    <!-- 获取所有境外学校 -->
+    <select id="getAllUniversities" resultMap="UniversityResult">
+        SELECT * FROM oe_university
+    </select>
+
+    <!-- 根据境外学校ID获取境外学校信息 -->
+    <select id="getUniversityById" parameterType="Long" resultMap="UniversityResult">
+        SELECT * FROM oe_university WHERE university_id = #{universityId}
+    </select>
+
+    <!-- 添加境外学校 -->
+    <insert id="addUniversity" parameterType="University">
+        INSERT INTO oe_university (university_name, country)
+        VALUES (#{universityName}, #{country})
+    </insert>
+
+    <!-- 更新境外学校信息 -->
+    <update id="updateUniversity" parameterType="University">
+        UPDATE oe_university
+        SET university_name = #{universityName}, country = #{country}
+        WHERE university_id = #{universityId}
+    </update>
+
+    <!-- 删除境外学校 -->
+    <delete id="deleteUniversity" parameterType="Long">
+        DELETE FROM oe_university WHERE university_id = #{universityId}
+    </delete>
+
+</mapper>

@@ -81,6 +81,19 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-oversea</artifactId>
+            <version>3.8.7</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-oversea</artifactId>
+            <version>3.8.7</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
