@@ -1,8 +1,11 @@
 package com.ruoyi.oversea.service.impl;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.oversea.domain.Announcement;
 import com.ruoyi.oversea.mapper.AnnouncementMapper;
 import com.ruoyi.oversea.service.AnnouncementService;
+import com.ruoyi.oversea.service.UniversityService;
+import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +22,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     private final AnnouncementMapper announcementMapper;
 
+    private final ISysUserService iSysUserService;
+
+    private final UniversityService universityService;
+
 
     /**
      * 获取所有公告
@@ -28,7 +35,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Transactional
     @Override
     public List<Announcement> getAllAnnouncements() {
-        return announcementMapper.getAllAnnouncements();
+        List<Announcement> allAnnouncements = announcementMapper.getAllAnnouncements();
+        fillAnnouncementAuthorName(allAnnouncements);
+        fillAnnouncementUniversityName(allAnnouncements);
+        return allAnnouncements;
     }
 
     /**
@@ -50,6 +60,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
      */
     @Override
     public boolean addAnnouncement(Announcement announcement) {
+        Long userId = SecurityUtils.getUserId();
+        announcement.setAuthorId(userId);
         int rows = announcementMapper.addAnnouncement(announcement);
         return rows > 0;
     }
@@ -76,5 +88,21 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     public boolean deleteAnnouncement(Long announcementId) {
         int rows = announcementMapper.deleteAnnouncement(announcementId);
         return rows > 0;
+    }
+
+     private void fillAnnouncementAuthorName(List<Announcement> announcements) {
+        for (Announcement announcement : announcements) {
+            Long authorId = announcement.getAuthorId();
+            String authorName = iSysUserService.selectUserById(authorId).getNickName();
+            announcement.setAuthorName(authorName);
+        }
+    }
+
+    private void fillAnnouncementUniversityName(List<Announcement> announcements) {
+        for (Announcement announcement : announcements) {
+            Long universityId = announcement.getOeUniversityId();
+            String universityName = universityService.getUniversityById(universityId).getUniversityName();
+            announcement.setUniversityName(universityName);
+        }
     }
 }

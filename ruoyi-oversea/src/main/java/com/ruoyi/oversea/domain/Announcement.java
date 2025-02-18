@@ -1,6 +1,7 @@
 package com.ruoyi.oversea.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -53,15 +54,26 @@ public class Announcement implements Serializable {
      */
     private Long authorId;
 
+    @TableField(exist = false)
+    private String authorName;
+
     /**
      * 境外学校ID
      */
     private Long oeUniversityId;
 
+    @TableField(exist = false)
+    private String universityName;
+
     /**
      * 附件文件名
      */
     private String fileName;
+
+    /**
+     * 状态（0：正常，1：删除）
+     */
+    private int status;
 
     /**
      * 序列化版本UID
