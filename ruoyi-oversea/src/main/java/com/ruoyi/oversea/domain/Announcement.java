@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.Getter;
@@ -42,11 +43,13 @@ public class Announcement implements Serializable {
     /**
      * 发布时间
      */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime releaseDate;
 
     /**
      * 结束时间
      */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime endDate;
 
     /**
@@ -54,6 +57,9 @@ public class Announcement implements Serializable {
      */
     private Long authorId;
 
+    /**
+     * 发布人姓名
+     */
     @TableField(exist = false)
     private String authorName;
 

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.oversea.mapper.OutboundApplicationMapper">
+
+    <!-- 结果映射 -->
+    <resultMap type="OutboundApplication" id="OutboundApplicationResult">
+        <id property="applicationId" column="application_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="announcementId" column="announcement_id"/>
+        <result property="applicationDate" column="application_date"/>
+        <result property="collegeReviewerId" column="college_reviewer_id"/>
+        <result property="collegeReviewDate" column="college_review_date"/>
+        <result property="collegeReviewComments" column="college_review_comments"/>
+        <result property="collegeReviewResult" column="college_review_result"/>
+        <result property="universityReviewerId" column="university_reviewer_id"/>
+        <result property="universityReviewDate" column="university_review_date"/>
+        <result property="universityReviewComments" column="university_review_comments"/>
+        <result property="universityReviewResult" column="university_review_result"/>
+        <result property="exchangeTerm" column="exchange_term"/>
+        <result property="universityId" column="university_id"/>
+        <result property="major" column="major"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <!-- 获取所有出境申请 -->
+    <select id="getAllOutboundApplications" resultMap="OutboundApplicationResult">
+        SELECT * FROM oe_outbound_application WHERE status = 0
+    </select>
+
+    <!-- 根据申请ID获取出境申请信息 -->
+    <select id="getOutboundApplicationById" parameterType="Long" resultMap="OutboundApplicationResult">
+        SELECT * FROM oe_outbound_application WHERE application_id = #{applicationId}
+    </select>
+
+    <!-- 添加出境申请 -->
+    <insert id="addOutboundApplication" parameterType="OutboundApplication">
+        INSERT INTO oe_outbound_application
+        (user_id, announcement_id, application_date, college_reviewer_id, college_review_date,
+         college_review_comments, college_review_result, university_reviewer_id, university_review_date,
+         university_review_comments, university_review_result, exchange_term, university_id, major, status)
+        VALUES (#{userId}, #{announcementId}, now(), #{collegeReviewerId}, #{collegeReviewDate},
+                #{collegeReviewComments}, 0, #{universityReviewerId}, #{universityReviewDate},
+                #{universityReviewComments}, 0, #{exchangeTerm}, #{universityId}, #{major}, 0)
+    </insert>
+
+    <!-- 更新出境申请信息 -->
+    <update id="updateOutboundApplication" parameterType="OutboundApplication">
+        UPDATE oe_outbound_application
+        SET user_id = #{userId}, announcement_id = #{announcementId}, application_date = #{applicationDate},
+            college_reviewer_id = #{collegeReviewerId}, college_review_date = #{collegeReviewDate},
+            college_review_comments = #{collegeReviewComments}, college_review_result = #{collegeReviewResult},
+            university_reviewer_id = #{universityReviewerId}, university_review_date = #{universityReviewDate},
+            university_review_comments = #{universityReviewComments}, university_review_result = #{universityReviewResult},
+            exchange_term = #{exchangeTerm}, university_id = #{universityId}, major = #{major}
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 删除出境申请（更新为已删除状态） -->
+    <update id="deleteOutboundApplication" parameterType="Long">
+        UPDATE oe_outbound_application
+        SET status = 1
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 更新学院审核结果 -->
+    <update id="updateCollegeReview" parameterType="OutboundApplication">
+        UPDATE oe_outbound_application
+        SET
+            college_reviewer_id = #{collegeReviewerId},
+            college_review_date = now(),
+            college_review_comments = #{collegeReviewComments},
+            college_review_result = #{collegeReviewResult}
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 更新学校审核结果 -->
+    <update id="updateUniversityReview" parameterType="OutboundApplication">
+        UPDATE oe_outbound_application
+        SET
+            university_reviewer_id = #{universityReviewerId},
+            university_review_date = now(),
+            university_review_comments = #{universityReviewComments},
+            university_review_result = #{universityReviewResult}
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 根据学生ID获取出境申请 -->
+    <select id="getOutboundApplicationsByUserId" parameterType="Long" resultMap="OutboundApplicationResult">
+        SELECT * FROM oe_outbound_application WHERE user_id = #{userId} and status = 0
+    </select>
+
+    <!-- 根据审核状态获取出境申请 -->
+    <select id="getOutboundApplicationsByReviewStatus" parameterType="Map" resultMap="OutboundApplicationResult">
+        SELECT * FROM oe_outbound_application
+        WHERE college_review_result = #{collegeReviewResult}
+          AND university_review_result = #{universityReviewResult} and status = 0
+    </select>
+
+</mapper>

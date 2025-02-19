@@ -24,10 +24,12 @@
             <span>{{ (scope.row.content && scope.row.content.slice(0, 20)) || '-' }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="境外学校" prop="universityName" align="center"></el-table-column>
         <el-table-column label="发布时间" prop="releaseDate" align="center"></el-table-column>
         <el-table-column label="结束时间" prop="endDate" align="center"></el-table-column>
         <el-table-column label="操作" align="center" width="300px">
           <template #default="{ row }">
+            <el-button type="text" icon="el-icon-paperclip" size="mini" @click="handleSubmitApplication(row)">提交申请</el-button> <!-- 新增的按钮 -->
             <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(row)" v-hasPermi="['oversea:announcement:view']">查看</el-button>
             <el-button type="text" icon="el-icon-edit" size="mini" @click="handleEdit(row)" v-hasPermi="['oversea:announcement:update']">编辑</el-button>
             <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(row)" v-hasPermi="['oversea:announcement:delete']">删除</el-button>
@@ -106,6 +108,22 @@
         <el-button @click="handleCloseViewDialog">关闭</el-button>
       </div>
     </el-dialog>
+
+    <!-- 提交申请对话框 -->
+    <el-dialog :visible.sync="applicationDialogVisible" title="提交申请" width="30%" @close="handleCloseApplicationDialog">
+      <el-form :model="applicationForm" label-width="100px" ref="applicationFormRef" :rules="applicationRules">
+        <el-form-item label="交流专业" prop="major">
+          <el-input v-model="applicationForm.major" placeholder="请输入交流专业"></el-input>
+        </el-form-item>
+        <el-form-item label="交流学期" prop="exchangeTerm">
+          <el-input v-model="applicationForm.exchangeTerm" placeholder="请输入交流学期"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer" style="text-align: center;">
+        <el-button @click="handleCloseApplicationDialog">取消</el-button>
+        <el-button type="primary" @click="handleSubmitApplicationForm">提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -117,6 +135,7 @@ import {
   deleteAnnouncement,
 } from "@/api/oversea/announcement";
 import {listAllUniversities} from "@/api/oversea/university";
+import {addOutboundApplication} from "@/api/oversea/outboundApplication";
 
 export default {
   data() {
@@ -141,6 +160,17 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+      },
+      applicationDialogVisible: false, // 控制提交申请对话框显示
+      applicationForm: {
+        major: "",// 专业
+        exchangeTerm: "", // 交流学期
+        universityId: "",
+        announcementId: null, // 公告ID
+      },
+      applicationRules: {
+        exchangeTerm: [{ required: true, message: "请输入交流学期", trigger: "blur" }],
+        major: [{ required: true, message: "请输入交流专业", trigger: "blur" }],
       },
       rules: {
         title: [{ required: true, message: "请输入公告标题", trigger: "blur" }],
@@ -242,7 +272,33 @@ export default {
         endDate: "",
         fileName: "",
       };
-    }
+    },
+    // 提交申请
+    handleSubmitApplication(row) {
+      this.applicationForm.announcementId = row.announcementId; // 获取当前公告的ID
+      this.applicationForm.universityId = row.oeUniversityId; // 获取当前公告的境外高校ID
+      this.applicationForm.major = "";
+      this.applicationForm.exchangeTerm = ""; // 清空输入框内容
+      this.applicationDialogVisible = true; // 打开对话框
+    },
+    // 提交申请表单
+    handleSubmitApplicationForm() {
+      this.$refs.applicationFormRef.validate(valid => {
+        if (valid) {
+          addOutboundApplication(this.applicationForm).then(() => {
+            this.$message.success("申请提交成功");
+            this.applicationDialogVisible = false;
+          }).catch(() => {
+            this.$message.error("提交申请失败");
+          });
+        }
+      });
+    },
+    // 关闭提交申请对话框
+    handleCloseApplicationDialog() {
+      this.applicationDialogVisible = false;
+      this.applicationForm = { exchangeTerm: "", announcementId: null }; // 重置表单
+    },
   },
 };
 </script>
