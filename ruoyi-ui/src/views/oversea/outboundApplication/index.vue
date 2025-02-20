@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <!-- 出境申请列表 -->
     <el-table :data="applicationList" v-loading="loading" style="width: 100%" border>
       <el-table-column label="申请ID" prop="applicationId" align="center"></el-table-column>

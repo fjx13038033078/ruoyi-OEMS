@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.oversea.mapper.ExchangeApplicationMapper">
+
+    <!-- 结果映射 -->
+    <resultMap type="ExchangeApplication" id="ExchangeApplicationResult">
+        <id property="applicationId" column="application_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="reinstatementApplicationId" column="reinstatement_application_id"/>
+        <result property="applicationDate" column="application_date"/>
+        <result property="status" column="status"/>
+        <result property="collegeReviewerId" column="college_reviewer_id"/>
+        <result property="collegeReviewerName" column="college_reviewer_name"/>
+        <result property="collegeReviewDate" column="college_review_date"/>
+        <result property="collegeReviewComments" column="college_review_comments"/>
+        <result property="collegeReviewResult" column="college_review_result"/>
+        <result property="universityReviewerId" column="university_reviewer_id"/>
+        <result property="universityReviewerName" column="university_reviewer_name"/>
+        <result property="universityReviewDate" column="university_review_date"/>
+        <result property="universityReviewComments" column="university_review_comments"/>
+        <result property="universityReviewResult" column="university_review_result"/>
+        <result property="overseasCourseId" column="overseas_course_id"/>
+        <result property="overseasCourseCredits" column="overseas_course_credits"/>
+        <result property="domesticCourseName" column="domestic_course_name"/>
+        <result property="domesticCourseCredits" column="domestic_course_credits"/>
+    </resultMap>
+
+    <!-- 获取所有学分置换申请 -->
+    <select id="getAllExchangeApplications" resultMap="ExchangeApplicationResult">
+        SELECT * FROM oe_exchange_application WHERE status = 0
+    </select>
+
+    <!-- 根据申请ID获取学分置换申请信息 -->
+    <select id="getExchangeApplicationById" parameterType="Long" resultMap="ExchangeApplicationResult">
+        SELECT * FROM oe_exchange_application WHERE application_id = #{applicationId}
+    </select>
+
+    <!-- 添加学分置换申请 -->
+    <insert id="addExchangeApplication" parameterType="com.ruoyi.oversea.domain.ExchangeApplication">
+        INSERT INTO oe_exchange_application
+        (user_id, reinstatement_application_id, application_date, status, college_reviewer_id, college_review_date,
+         college_review_comments, college_review_result, university_reviewer_id, university_review_date,
+         university_review_comments, university_review_result, overseas_course_id, overseas_course_credits,
+         domestic_course_name, domestic_course_credits)
+        VALUES (#{userId}, #{reinstatementApplicationId}, now(), 0, #{collegeReviewerId}, #{collegeReviewDate},
+                #{collegeReviewComments}, 0, #{universityReviewerId}, #{universityReviewDate},
+                #{universityReviewComments}, 0, #{overseasCourseId}, #{overseasCourseCredits},
+                #{domesticCourseName}, #{domesticCourseCredits})
+    </insert>
+
+    <!-- 更新学分置换申请信息 -->
+    <update id="updateExchangeApplication" parameterType="com.ruoyi.oversea.domain.ExchangeApplication">
+        UPDATE oe_exchange_application
+        SET user_id = #{userId}, reinstatement_application_id = #{reinstatementApplicationId}, application_date = #{applicationDate},
+            status = #{status}, college_reviewer_id = #{collegeReviewerId}, college_review_date = #{collegeReviewDate},
+            college_review_comments = #{collegeReviewComments}, college_review_result = #{collegeReviewResult},
+            university_reviewer_id = #{universityReviewerId}, university_review_date = #{universityReviewDate},
+            university_review_comments = #{universityReviewComments}, university_review_result = #{universityReviewResult},
+            overseas_course_id = #{overseasCourseId}, overseas_course_credits = #{overseasCourseCredits},
+            domestic_course_name = #{domesticCourseName}, domestic_course_credits = #{domesticCourseCredits}
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 删除学分置换申请（更新为已删除状态） -->
+    <update id="deleteExchangeApplication" parameterType="Long">
+        UPDATE oe_exchange_application
+        SET status = 1
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 更新学院审核结果 -->
+    <update id="updateCollegeReview" parameterType="com.ruoyi.oversea.domain.ExchangeApplication">
+        UPDATE oe_exchange_application
+        SET college_reviewer_id = #{collegeReviewerId}, college_review_date = now(),
+            college_review_comments = #{collegeReviewComments}, college_review_result = #{collegeReviewResult}
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 更新学校审核结果 -->
+    <update id="updateUniversityReview" parameterType="com.ruoyi.oversea.domain.ExchangeApplication">
+        UPDATE oe_exchange_application
+        SET university_reviewer_id = #{universityReviewerId}, university_review_date = now(),
+            university_review_comments = #{universityReviewComments}, university_review_result = #{universityReviewResult}
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 根据学生ID获取学分置换申请 -->
+    <select id="getExchangeApplicationsByUserId" parameterType="Long" resultMap="ExchangeApplicationResult">
+        SELECT * FROM oe_exchange_application WHERE user_id = #{userId} and status = 0
+    </select>
+
+</mapper>
