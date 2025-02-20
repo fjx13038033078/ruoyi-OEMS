@@ -13,7 +13,9 @@
         <template #default="scope">
           <el-tag
             :type="scope.row.collegeReviewResult === 0 ? 'warning' : scope.row.collegeReviewResult === 1 ? 'success' : 'danger'">
-            {{"审核中"}}
+            {{
+              scope.row.collegeReviewResult === 0 ? '未审核' : scope.row.collegeReviewResult === 1 ? '通过' : '拒绝'
+            }}
           </el-tag>
         </template>
       </el-table-column>
@@ -21,7 +23,9 @@
         <template #default="scope">
           <el-tag
             :type="scope.row.universityReviewResult === 0 ? 'warning' : scope.row.universityReviewResult === 1 ? 'success' : 'danger'">
-            {{"审核中"}}
+            {{
+              scope.row.universityReviewResult === 0 ? '未审核' : scope.row.universityReviewResult === 1 ? '通过' : '拒绝'
+            }}
           </el-tag>
         </template>
       </el-table-column>
