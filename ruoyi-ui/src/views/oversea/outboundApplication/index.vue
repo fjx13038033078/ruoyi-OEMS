@@ -38,8 +38,12 @@
           <el-button v-if="row.collegeReviewResult === 0" type="text" icon="el-icon-check" size="mini"
                      @click="handleCollegeReview(row)">学院审核
           </el-button>
-          <el-button v-if="row.collegeReviewResult === 1 && row.universityReviewResult === 0" type="text" icon="el-icon-check" size="mini"
+          <el-button v-if="row.collegeReviewResult === 1 && row.universityReviewResult === 0" type="text"
+                     icon="el-icon-check" size="mini"
                      @click="handleUniversityReview(row)">学校审核
+          </el-button>
+          <el-button v-if="row.collegeReviewResult === 1 && row.universityReviewResult === 1" type="text"
+                     icon="el-icon-refresh" size="mini" @click="handleReinstatementApplication(row)">复学申请
           </el-button>
         </template>
       </el-table-column>
@@ -82,7 +86,9 @@
           <el-input v-model="viewApplicationForm.collegeReviewDate" disabled></el-input>
         </el-form-item>
         <el-form-item label="学院审核结果">
-          <el-input :value="viewApplicationForm.collegeReviewResult === 0 ? '未审核' : viewApplicationForm.collegeReviewResult === 1 ? '通过' : '拒绝'" disabled></el-input>
+          <el-input
+            :value="viewApplicationForm.collegeReviewResult === 0 ? '未审核' : viewApplicationForm.collegeReviewResult === 1 ? '通过' : '拒绝'"
+            disabled></el-input>
         </el-form-item>
         <el-form-item label="学院审核人">
           <el-input v-model="viewApplicationForm.collegeReviewerName" disabled></el-input>
@@ -94,7 +100,9 @@
           <el-input v-model="viewApplicationForm.universityReviewDate" disabled></el-input>
         </el-form-item>
         <el-form-item label="学校审核结果">
-          <el-input :value="viewApplicationForm.universityReviewResult === 0 ? '未审核' : viewApplicationForm.universityReviewResult === 1 ? '通过' : '拒绝'" disabled></el-input>
+          <el-input
+            :value="viewApplicationForm.universityReviewResult === 0 ? '未审核' : viewApplicationForm.universityReviewResult === 1 ? '通过' : '拒绝'"
+            disabled></el-input>
         </el-form-item>
         <el-form-item label="学校审核人">
           <el-input v-model="viewApplicationForm.universityReviewerName" disabled></el-input>
@@ -146,6 +154,19 @@
         <el-button type="primary" @click="handleSubmitUniversityReview">提交</el-button>
       </div>
     </el-dialog>
+
+    <!-- 复学申请 Dialog -->
+    <el-dialog :visible.sync="reinstatementDialogVisible" title="复学申请" @close="handleCloseReinstatementDialog">
+      <el-form :model="reinstatementForm" label-width="80px">
+        <el-form-item label="复学学期">
+          <el-input v-model="reinstatementForm.exchangeTerm" placeholder="请输入复学学期"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer" style="text-align: center;">
+        <el-button @click="reinstatementDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitReinstatementApplication">提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -156,6 +177,7 @@ import {
   updateCollegeReview,
   updateUniversityReview
 } from "@/api/oversea/outboundApplication";
+import {addReinstatementApplication} from "@/api/oversea/reinstatementApplication";
 
 export default {
   data() {
@@ -167,6 +189,7 @@ export default {
       viewDialogVisible: false,
       collegeReviewDialogVisible: false,
       universityReviewDialogVisible: false,
+      reinstatementDialogVisible: false, // 控制复学申请 Dialog 的显示与隐藏
       applicationForm: {
         major: "",
         exchangeTerm: "",
@@ -182,6 +205,10 @@ export default {
         applicationId: "",
         universityReviewComments: "",
         universityReviewResult: 1, // 默认通过
+      },
+      reinstatementForm: {
+        exchangeTerm: '', // 复学学期
+        outboundApplicationId: null // 当前行的 outboundApplicationId
       },
       queryParams: {
         pageNum: 1,
@@ -268,6 +295,27 @@ export default {
       }).catch(() => {
         this.$message.error("学校审核失败");
       });
+    },
+    // 显示复学申请 Dialog
+    handleReinstatementApplication(row) {
+      this.reinstatementForm.outboundApplicationId = row.applicationId; // 设置当前行的 outboundApplicationId
+      this.reinstatementDialogVisible = true; // 显示复学申请 Dialog
+    },
+    // 提交复学申请
+    async submitReinstatementApplication() {
+      try {
+        addReinstatementApplication(this.reinstatementForm);
+        this.$message.success('复学申请提交成功');
+        this.reinstatementDialogVisible = false; // 关闭对话框
+        this.handleCloseReinstatementDialog();
+      } catch (error) {
+        this.$message.error('复学申请提交失败');
+      }
+    },
+    // 重置表单
+    handleCloseReinstatementDialog() {
+      this.reinstatementForm.exchangeTerm = '';
+      this.reinstatementForm.outboundApplicationId = null;
     },
   },
 };

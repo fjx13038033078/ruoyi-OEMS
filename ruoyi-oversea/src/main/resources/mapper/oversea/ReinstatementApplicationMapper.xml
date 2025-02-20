@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.oversea.mapper.ReinstatementApplicationMapper">
+
+    <!-- 结果映射 -->
+    <resultMap type="ReinstatementApplication" id="ReinstatementApplicationResult">
+        <id property="applicationId" column="application_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="outboundApplicationId" column="outbound_application_id"/>
+        <result property="reinstatementDate" column="reinstatement_date"/>
+        <result property="exchangeTerm" column="exchange_term"/>
+        <result property="status" column="status"/>
+        <result property="collegeReviewerId" column="college_reviewer_id"/>
+        <result property="collegeReviewerName" column="college_reviewer_name"/>
+        <result property="collegeReviewDate" column="college_review_date"/>
+        <result property="collegeReviewComments" column="college_review_comments"/>
+        <result property="collegeReviewResult" column="college_review_result"/>
+        <result property="universityReviewerId" column="university_reviewer_id"/>
+        <result property="universityReviewerName" column="university_reviewer_name"/>
+        <result property="universityReviewDate" column="university_review_date"/>
+        <result property="universityReviewComments" column="university_review_comments"/>
+        <result property="universityReviewResult" column="university_review_result"/>
+    </resultMap>
+
+    <!-- 获取所有复学申请 -->
+    <select id="getAllReinstatementApplications" resultMap="ReinstatementApplicationResult">
+        SELECT * FROM oe_reinstatement_application WHERE status = 0
+    </select>
+
+    <!-- 根据申请ID获取复学申请信息 -->
+    <select id="getReinstatementApplicationById" parameterType="Long" resultMap="ReinstatementApplicationResult">
+        SELECT * FROM oe_reinstatement_application WHERE application_id = #{applicationId}
+    </select>
+
+    <!-- 添加复学申请 -->
+    <insert id="addReinstatementApplication" parameterType="com.ruoyi.oversea.domain.ReinstatementApplication">
+        INSERT INTO oe_reinstatement_application
+        (user_id, outbound_application_id, reinstatement_date, exchange_term, status,
+         college_reviewer_id, college_review_date, college_review_comments, college_review_result,
+         university_reviewer_id, university_review_date, university_review_comments, university_review_result)
+        VALUES (#{userId}, #{outboundApplicationId}, now(), #{exchangeTerm}, 0,
+                #{collegeReviewerId}, #{collegeReviewDate}, #{collegeReviewComments}, 0,
+                #{universityReviewerId}, #{universityReviewDate}, #{universityReviewComments}, 0)
+    </insert>
+
+    <!-- 更新复学申请信息 -->
+    <update id="updateReinstatementApplication" parameterType="com.ruoyi.oversea.domain.ReinstatementApplication">
+        UPDATE oe_reinstatement_application
+        SET user_id = #{userId}, outbound_application_id = #{outboundApplicationId},
+            reinstatement_date = #{reinstatementDate}, exchange_term = #{exchangeTerm},
+            status = #{status}, college_reviewer_id = #{collegeReviewerId},
+            college_review_date = #{collegeReviewDate}, college_review_comments = #{collegeReviewComments},
+            college_review_result = #{collegeReviewResult}, university_reviewer_id = #{universityReviewerId},
+            university_review_date = #{universityReviewDate}, university_review_comments = #{universityReviewComments},
+            university_review_result = #{universityReviewResult}
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 删除复学申请（更新为已删除状态） -->
+    <update id="deleteReinstatementApplication" parameterType="Long">
+        UPDATE oe_reinstatement_application
+        SET status = 1
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 更新学院审核结果 -->
+    <update id="updateCollegeReview" parameterType="com.ruoyi.oversea.domain.ReinstatementApplication">
+        UPDATE oe_reinstatement_application
+        SET college_reviewer_id = #{collegeReviewerId}, college_review_date = now(),
+            college_review_comments = #{collegeReviewComments}, college_review_result = #{collegeReviewResult}
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 更新学校审核结果 -->
+    <update id="updateUniversityReview" parameterType="com.ruoyi.oversea.domain.ReinstatementApplication">
+        UPDATE oe_reinstatement_application
+        SET university_reviewer_id = #{universityReviewerId}, university_review_date = now(),
+            university_review_comments = #{universityReviewComments}, university_review_result = #{universityReviewResult}
+        WHERE application_id = #{applicationId}
+    </update>
+
+    <!-- 根据学生ID获取复学申请 -->
+    <select id="getReinstatementApplicationsByUserId" parameterType="Long" resultMap="ReinstatementApplicationResult">
+        SELECT * FROM oe_reinstatement_application WHERE user_id = #{userId} and status = 0
+    </select>
+
+    <!-- 根据审核状态获取复学申请 -->
+    <select id="getReinstatementApplicationsByReviewStatus" parameterType="Map" resultMap="ReinstatementApplicationResult">
+        SELECT * FROM oe_reinstatement_application
+        WHERE college_review_result = #{collegeReviewResult}
+          AND university_review_result = #{universityReviewResult} and status = 0
+    </select>
+
+</mapper>
