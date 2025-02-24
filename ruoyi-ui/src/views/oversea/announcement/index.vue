@@ -21,7 +21,7 @@
         <el-table-column label="公告标题" prop="title" align="center"></el-table-column>
         <el-table-column label="公告内容" prop="content" align="center">
           <template #default="scope">
-            <span>{{ (scope.row.content && scope.row.content.slice(0, 20)) || '-' }}</span>
+            <span>{{ scope.row.content.slice(0, 5) }}...</span>
           </template>
         </el-table-column>
         <el-table-column label="境外学校" prop="universityName" align="center"></el-table-column>
