@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.oversea.mapper.OeCourseMapper">
+
+    <resultMap id="OeCourseResult" type="com.ruoyi.oversea.domain.OeCourse">
+        <id property="courseId" column="course_id"/>
+        <result property="courseName" column="course_name"/>
+        <result property="credit" column="credit"/>
+        <result property="universityId" column="university_id"/>
+    </resultMap>
+
+    <!-- 查询所有课程 -->
+    <select id="selectAllCourses" resultMap="OeCourseResult">
+        SELECT * FROM oe_course
+    </select>
+
+    <!-- 根据ID查询课程 -->
+    <select id="selectCourseById" parameterType="Long" resultMap="OeCourseResult">
+        SELECT * FROM oe_course WHERE course_id = #{courseId}
+    </select>
+
+    <!-- 插入新课程 -->
+    <insert id="insertCourse" parameterType="com.ruoyi.oversea.domain.OeCourse">
+        INSERT INTO oe_course (course_name, credit, university_id)
+        VALUES (#{courseName}, #{credit}, #{universityId})
+    </insert>
+
+    <!-- 更新课程信息 -->
+    <update id="updateCourse" parameterType="com.ruoyi.oversea.domain.OeCourse">
+        UPDATE oe_course
+        SET course_name = #{courseName}, credit = #{credit}, university_id = #{universityId}
+        WHERE course_id = #{courseId}
+    </update>
+
+    <!-- 删除课程 -->
+    <delete id="deleteCourse" parameterType="Long">
+        DELETE FROM oe_course WHERE course_id = #{courseId}
+    </delete>
+
+</mapper>
