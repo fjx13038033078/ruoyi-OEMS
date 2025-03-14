@@ -44,3 +44,21 @@ export function deleteUniversity(universityId) {
     params: { universityId }
   })
 }
+
+// 添加专业
+export function addMajor(data) {
+  return request({
+    url: '/oversea/major/add',
+    method: 'post',
+    data: data
+  })
+}
+
+// 获取学校的专业列表
+export function listMajorsByUniversityId(universityId) {
+  return request({
+    url: '/oversea/major/listByUniversity',
+    method: 'get',
+    params: { universityId }
+  })
+}

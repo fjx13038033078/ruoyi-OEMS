@@ -321,5 +321,4 @@ export default {
 </script>
 
 <style scoped>
-/* 样式可以根据需求进一步调整 */
 </style>

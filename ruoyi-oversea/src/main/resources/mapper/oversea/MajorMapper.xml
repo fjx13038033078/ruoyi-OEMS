@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.oversea.mapper.MajorMapper">
+
+    <resultMap type="Major" id="MajorResult">
+        <id property="majorId" column="major_id"/>
+        <result property="majorName" column="major_name"/>
+        <result property="universityId" column="university_id"/>
+    </resultMap>
+
+    <select id="getAllMajors" resultMap="MajorResult">
+        SELECT * FROM oe_major
+    </select>
+
+    <select id="getMajorById" parameterType="Long" resultMap="MajorResult">
+        SELECT * FROM oe_major WHERE major_id = #{majorId}
+    </select>
+
+    <select id="getMajorsByUniversityId" parameterType="Long" resultMap="MajorResult">
+        SELECT * FROM oe_major WHERE university_id = #{universityId}
+    </select>
+
+    <insert id="addMajor" parameterType="Major">
+        INSERT INTO oe_major (major_name, university_id)
+        VALUES (#{majorName}, #{universityId})
+    </insert>
+
+    <update id="updateMajor" parameterType="Major">
+        UPDATE oe_major
+        SET major_name = #{majorName}, university_id = #{universityId}
+        WHERE major_id = #{majorId}
+    </update>
+
+    <delete id="deleteMajor" parameterType="Long">
+        DELETE FROM oe_major WHERE major_id = #{majorId}
+    </delete>
+</mapper>
