@@ -1,13 +1,17 @@
 package com.ruoyi.oversea.service.impl;
 
 import com.ruoyi.oversea.domain.OeCourse;
+import com.ruoyi.oversea.domain.OutboundApplication;
+import com.ruoyi.oversea.domain.ReinstatementApplication;
 import com.ruoyi.oversea.mapper.OeCourseMapper;
 import com.ruoyi.oversea.service.OeCourseService;
+import com.ruoyi.oversea.service.OutboundApplicationService;
 import com.ruoyi.oversea.service.UniversityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,7 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OeCourseServiceImpl implements OeCourseService {
     private final OeCourseMapper oeCourseMapper;
-
+    private final ReinstatementApplicationServiceImpl reinstatementApplicationService;
+    private final OutboundApplicationService outboundApplicationService;
     private final UniversityService universityService;
     /**
      * 获取所有课程
@@ -37,6 +42,19 @@ public class OeCourseServiceImpl implements OeCourseService {
     @Override
     public OeCourse getCourseById(Long courseId) {
         return oeCourseMapper.selectCourseById(courseId);
+    }
+
+    @Override
+    public List<OeCourse> getCourseByRApplicationId(Long rApplicationId) {
+        ReinstatementApplication reinstatementApplicationById = reinstatementApplicationService.getReinstatementApplicationById(rApplicationId);
+        Long outboundApplicationId = reinstatementApplicationById.getOutboundApplicationId();
+        OutboundApplication outboundApplicationById = outboundApplicationService.getOutboundApplicationById(outboundApplicationId);
+        Long universityId = outboundApplicationById.getUniversityId();
+        if (universityId != null) {
+            List<OeCourse> oeCourses = oeCourseMapper.selectCourseByUniversityId(universityId);
+            return oeCourses;
+        }
+        return Collections.emptyList();
     }
 
     /**

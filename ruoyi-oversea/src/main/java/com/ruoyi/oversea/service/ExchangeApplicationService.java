@@ -70,4 +70,5 @@ import java.util.List;
      * @return 学分置换申请列表
      */
     List<ExchangeApplication> getExchangeApplicationsByUserId(Long userId);
+
 }

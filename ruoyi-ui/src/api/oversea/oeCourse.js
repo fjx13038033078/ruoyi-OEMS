@@ -9,6 +9,14 @@ export function listAllCourses(query) {
   })
 }
 
+export function getCourseByRApplicationId(rApplicationId) {
+  return request({
+    url: '/oversea/course/listByRApplicationId',
+    method: 'get',
+    params: { rApplicationId }
+  })
+}
+
 // 查询课程详细信息
 export function getCourseById(courseId) {
   return request({

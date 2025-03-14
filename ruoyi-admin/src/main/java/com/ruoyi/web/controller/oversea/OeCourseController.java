@@ -34,6 +34,12 @@ public class OeCourseController extends BaseController {
         return getDataTable(allCourses);
     }
 
+    @GetMapping("/listByRApplicationId")
+    public AjaxResult getCourseByRApplicationId(@RequestParam Long rApplicationId){
+        List<OeCourse> courseByRApplicationId = oeCourseService.getCourseByRApplicationId(rApplicationId);
+        return success(courseByRApplicationId);
+    }
+
     /**
      * 根据课程ID获取课程信息
      */

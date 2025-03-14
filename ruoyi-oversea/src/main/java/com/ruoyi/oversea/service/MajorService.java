@@ -16,6 +16,8 @@ public interface MajorService {
 
     List<Major> getMajorsByUniversityId(Long universityId);
 
+    List<Major> getMajorByRApplicationId(Long rApplicationId);
+
     boolean addMajor(Major major);
 
     boolean updateMajor(Major major);

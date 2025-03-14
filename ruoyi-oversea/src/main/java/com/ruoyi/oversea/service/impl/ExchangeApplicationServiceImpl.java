@@ -2,8 +2,10 @@ package com.ruoyi.oversea.service.impl;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.oversea.domain.ExchangeApplication;
+import com.ruoyi.oversea.domain.OeCourse;
 import com.ruoyi.oversea.mapper.ExchangeApplicationMapper;
 import com.ruoyi.oversea.service.ExchangeApplicationService;
+import com.ruoyi.oversea.service.OeCourseService;
 import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.List;
 public class ExchangeApplicationServiceImpl implements ExchangeApplicationService {
     private final ExchangeApplicationMapper exchangeApplicationMapper;
     private final ISysUserService iSysUserService;
+    private final OeCourseService oeCourseService;
 
     /**
      * 获取所有学分置换申请
@@ -53,6 +56,11 @@ public class ExchangeApplicationServiceImpl implements ExchangeApplicationServic
      */
     @Override
     public boolean addExchangeApplication(ExchangeApplication exchangeApplication) {
+        Long overseasCourseId = exchangeApplication.getOverseasCourseId();
+        if (overseasCourseId != null) {
+            OeCourse oeCourse = oeCourseService.getCourseById(overseasCourseId);
+            exchangeApplication.setOverseasCourseCredits(oeCourse.getCredit());
+        }
         Long userId = SecurityUtils.getUserId();
         exchangeApplication.setUserId(userId);
         int rows = exchangeApplicationMapper.addExchangeApplication(exchangeApplication);
@@ -137,6 +145,9 @@ public class ExchangeApplicationServiceImpl implements ExchangeApplicationServic
 
             Long universityReviewerId = application.getUniversityReviewerId();
             String universityReviewerName = (universityReviewerId != null) ? iSysUserService.selectUserById(universityReviewerId).getNickName() : "";
+
+            Long overseasCourseId = application.getOverseasCourseId();
+            application.setOverseasCourseName((overseasCourseId != null) ? oeCourseService.getCourseById(overseasCourseId).getCourseName() : "");
 
             application.setUserName(userName);
             application.setCollegeReviewerName(collegeReviewerName);

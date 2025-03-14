@@ -25,6 +25,8 @@ public interface OeCourseMapper {
      */
     OeCourse selectCourseById(Long courseId);
 
+    List<OeCourse> selectCourseByUniversityId(Long universityId);
+
     /**
      * 添加课程
      * @param course

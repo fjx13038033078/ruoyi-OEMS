@@ -5,7 +5,7 @@
       <el-table-column label="申请ID" prop="applicationId" align="center"></el-table-column>
       <el-table-column label="学生姓名" prop="userName" align="center"></el-table-column>
       <el-table-column label="申请日期" prop="applicationDate" align="center"></el-table-column>
-      <el-table-column label="境外课程" prop="overseasCourseId" align="center"></el-table-column>
+      <el-table-column label="境外课程" prop="overseasCourseName" align="center"></el-table-column>
       <el-table-column label="境外课程学分" prop="overseasCourseCredits" align="center"></el-table-column>
       <el-table-column label="校内课程" prop="domesticCourseName" align="center"></el-table-column>
       <el-table-column label="校内课程学分" prop="domesticCourseCredits" align="center"></el-table-column>
@@ -62,7 +62,7 @@
           <el-input v-model="viewExchangeApplicationForm.applicationDate" disabled></el-input>
         </el-form-item>
         <el-form-item label="境外课程">
-          <el-input v-model="viewExchangeApplicationForm.overseasCourseId" disabled></el-input>
+          <el-input v-model="viewExchangeApplicationForm.overseasCourseName" disabled></el-input>
         </el-form-item>
         <el-form-item label="境外课程学分">
           <el-input v-model="viewExchangeApplicationForm.overseasCourseCredits" disabled></el-input>

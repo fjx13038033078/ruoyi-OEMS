@@ -1,5 +1,6 @@
 package com.ruoyi.oversea.service;
 
+import com.ruoyi.oversea.domain.Major;
 import com.ruoyi.oversea.domain.OeCourse;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public interface OeCourseService {
      * @return 课程信息
      */
     OeCourse getCourseById(Long courseId);
+
+    List<OeCourse> getCourseByRApplicationId(Long rApplicationId);
 
     /**
      * 添加课程

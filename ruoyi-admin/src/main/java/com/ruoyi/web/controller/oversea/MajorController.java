@@ -35,6 +35,12 @@ public class MajorController extends BaseController {
         return success(majorsByUniversityId);
     }
 
+    @GetMapping("/listByRApplicationId")
+    public AjaxResult getMajorByRApplicationId(@RequestParam Long rApplicationId){
+        List<Major> majorByRApplicationId = majorService.getMajorByRApplicationId(rApplicationId);
+        return success(majorByRApplicationId);
+    }
+
     @GetMapping("/detail")
     public AjaxResult getMajorById(@RequestParam Long majorId) {
         return AjaxResult.success(majorService.getMajorById(majorId));

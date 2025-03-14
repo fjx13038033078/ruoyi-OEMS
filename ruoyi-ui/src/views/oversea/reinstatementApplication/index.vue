@@ -143,17 +143,23 @@
     <!-- 学分置换申请对话框 -->
     <el-dialog :visible.sync="creditExchangeDialogVisible" title="学分置换申请" width="40%" @close="handleCloseCreditExchangeDialog">
       <el-form :model="creditExchangeForm" label-width="100px">
-        <el-form-item label="境外课程名">
-          <el-input v-model="creditExchangeForm.overseasCourseId" placeholder="请输入境外课程名"></el-input>
-        </el-form-item>
-        <el-form-item label="境外课程学分">
-          <el-input v-model="creditExchangeForm.overseasCourseCredits" placeholder="请输入境外课程成绩"></el-input>
+        <el-form-item label="境外课程" prop="overseasCourseId">
+          <el-select v-model="creditExchangeForm.overseasCourseId" placeholder="请选择境外课程" style="width: 100%">
+            <el-option
+              v-for="course in overseasCourseList"
+              :key="course.courseId"
+              :label="course.courseName"
+              :value="course.courseId">
+              <span>{{ course.courseName }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ course.credit }}学分</span>
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="校内课程名">
           <el-input v-model="creditExchangeForm.domesticCourseName" placeholder="请输入校内课程名"></el-input>
         </el-form-item>
         <el-form-item label="校内课程学分">
-          <el-input v-model="creditExchangeForm.domesticCourseCredits" placeholder="请输入校内课程成绩"></el-input>
+          <el-input v-model="creditExchangeForm.domesticCourseCredits" placeholder="请输入校内课程学分"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center;">
@@ -171,7 +177,8 @@ import {
   updateCollegeReview,
   updateUniversityReview,
 } from '@/api/oversea/reinstatementApplication';
-import {addExchangeApplication} from "@/api/oversea/exchangeApplication";
+import { addExchangeApplication } from "@/api/oversea/exchangeApplication";
+import { getCourseByRApplicationId } from "@/api/oversea/oeCourse";
 
 export default {
   data() {
@@ -194,10 +201,10 @@ export default {
         universityReviewComments: "",
         universityReviewResult: 1
       },
+      overseasCourseList: [], // 境外课程列表
       creditExchangeForm: {
         reinstatementApplicationId: "",
-        overseasCourseId: 1,
-        overseasCourseCredits: "",
+        overseasCourseId: undefined,
         domesticCourseName: "",
         domesticCourseCredits: ""
       },
@@ -276,8 +283,11 @@ export default {
     // 打开学分置换申请对话框
     handleCreditExchangeRequest(row) {
       this.creditExchangeForm.reinstatementApplicationId = row.applicationId;
-      this.creditExchangeForm.overseasCourseId = 1;
-      this.creditExchangeForm.overseasCourseCredits = "";
+      // 获取该申请对应的境外课程列表
+      getCourseByRApplicationId(row.applicationId).then(response => {
+        this.overseasCourseList = response.data;
+      });
+      this.creditExchangeForm.overseasCourseId = undefined;
       this.creditExchangeForm.domesticCourseName = "";
       this.creditExchangeForm.domesticCourseCredits = "";
       this.creditExchangeDialogVisible = true;
@@ -287,11 +297,11 @@ export default {
     handleCloseCreditExchangeDialog() {
       this.creditExchangeForm = {
         reinstatementApplicationId: "",
-        overseasCourseId: 1,
-        overseasCourseCredits: "",
+        overseasCourseId: undefined,
         domesticCourseName: "",
         domesticCourseCredits: ""
       };
+      this.overseasCourseList = [];
       this.creditExchangeDialogVisible = false;
     },
 

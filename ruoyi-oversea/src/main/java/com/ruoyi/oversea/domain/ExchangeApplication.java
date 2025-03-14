@@ -108,6 +108,9 @@ public class ExchangeApplication implements Serializable {
      */
     private Long overseasCourseId;
 
+    @TableField(exist = false)
+    private String overseasCourseName;
+
     /**
      * 境外课程学分
      */

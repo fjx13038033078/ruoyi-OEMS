@@ -15,6 +15,14 @@ export function listMajorsByUniversityId(universityId) {
   })
 }
 
+export function getMajorByRApplicationId(rApplicationId) {
+  return request({
+    url: '/oversea/major/listByRApplicationId',
+    method: 'get',
+    params: { rApplicationId }
+  })
+}
+
 export function getMajorDetail(majorId) {
   return request({
     url: '/oversea/major/detail',

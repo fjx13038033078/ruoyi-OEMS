@@ -19,6 +19,10 @@
         SELECT * FROM oe_course WHERE course_id = #{courseId}
     </select>
 
+    <select id="selectCourseByUniversityId" parameterType="Long" resultMap="OeCourseResult">
+        SELECT * FROM oe_course where university_id = #{universityId}
+    </select>
+
     <!-- 插入新课程 -->
     <insert id="insertCourse" parameterType="com.ruoyi.oversea.domain.OeCourse">
         INSERT INTO oe_course (course_name, credit, university_id)
