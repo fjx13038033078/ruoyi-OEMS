@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.oversea.mapper.OeInMajorMapper">
+
+    <!-- 结果映射 -->
+    <resultMap type="OeInMajor" id="OeInMajorResult">
+        <id property="id" column="id"/>
+        <result property="majorName" column="major_name"/>
+    </resultMap>
+
+    <!-- 查询所有专业 -->
+    <select id="getAllMajors" resultMap="OeInMajorResult">
+        SELECT * FROM oe_in_major
+    </select>
+
+    <!-- 根据ID查询专业 -->
+    <select id="getMajorById" parameterType="Long" resultMap="OeInMajorResult">
+        SELECT * FROM oe_in_major WHERE id = #{id}
+    </select>
+
+    <!-- 添加专业 -->
+    <insert id="addMajor" parameterType="OeInMajor">
+        INSERT INTO oe_in_major (major_name) VALUES (#{majorName})
+    </insert>
+
+    <!-- 更新专业信息 -->
+    <update id="updateMajor" parameterType="OeInMajor">
+        UPDATE oe_in_major
+        SET major_name = #{majorName}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除专业 -->
+    <delete id="deleteMajor" parameterType="Long">
+        DELETE FROM oe_in_major WHERE id = #{id}
+    </delete>
+
+</mapper>
