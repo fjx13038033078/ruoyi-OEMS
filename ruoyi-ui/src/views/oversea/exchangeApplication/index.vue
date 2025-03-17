@@ -31,13 +31,18 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="250px">
         <template #default="{ row }">
-          <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(row)" v-hasPermi="['oversea:exchange:view']">查看</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(row)" v-hasPermi="['oversea:exchange:delete']">删除</el-button>
+          <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(row)"
+                     v-hasPermi="['oversea:exchange:view']">查看
+          </el-button>
+          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(row)"
+                     v-hasPermi="['oversea:exchange:delete']">删除
+          </el-button>
           <el-button v-if="row.collegeReviewResult === 0" type="text" icon="el-icon-check" size="mini"
-                     @click="handleCollegeReview(row)" v-hasPermi="['oversea:exchange:SUAudit']">学院审核
+                     @click="handleCollegeReview(row)" v-hasPermi="['oversea:exchange:SAudit']">学院审核
           </el-button>
           <el-button v-if="row.collegeReviewResult === 1 && row.universityReviewResult === 0" type="text"
-                     icon="el-icon-check" size="mini" @click="handleUniversityReview(row)" v-hasPermi="['oversea:exchange:UAudit']">学校审核
+                     icon="el-icon-check" size="mini" @click="handleUniversityReview(row)"
+                     v-hasPermi="['oversea:exchange:UAudit']">学校审核
           </el-button>
         </template>
       </el-table-column>
@@ -53,7 +58,8 @@
     />
 
     <!-- 查看学分置换申请详情对话框 -->
-    <el-dialog :visible.sync="viewDialogVisible" title="查看学分置换申请详情" width="40%" @close="handleCloseViewDialog">
+    <el-dialog :visible.sync="viewDialogVisible" title="查看学分置换申请详情" width="40%"
+               @close="handleCloseViewDialog">
       <el-form :model="viewExchangeApplicationForm" label-width="100px">
         <el-form-item label="学生姓名">
           <el-input v-model="viewExchangeApplicationForm.userName" disabled></el-input>
@@ -108,10 +114,12 @@
     </el-dialog>
 
     <!-- 学院审核对话框 -->
-    <el-dialog :visible.sync="collegeReviewDialogVisible" title="学院审核" width="40%" @close="handleCloseCollegeReviewDialog">
+    <el-dialog :visible.sync="collegeReviewDialogVisible" title="学院审核" width="40%"
+               @close="handleCloseCollegeReviewDialog">
       <el-form :model="collegeReviewForm" label-width="100px">
         <el-form-item label="审核意见">
-          <el-input v-model="collegeReviewForm.collegeReviewComments" type="textarea" placeholder="请输入学院审核意见"></el-input>
+          <el-input v-model="collegeReviewForm.collegeReviewComments" type="textarea"
+                    placeholder="请输入学院审核意见"></el-input>
         </el-form-item>
         <el-form-item label="审核结果">
           <el-radio-group v-model="collegeReviewForm.collegeReviewResult">
@@ -127,10 +135,12 @@
     </el-dialog>
 
     <!-- 学校审核对话框 -->
-    <el-dialog :visible.sync="universityReviewDialogVisible" title="学校审核" width="40%" @close="handleCloseUniversityReviewDialog">
+    <el-dialog :visible.sync="universityReviewDialogVisible" title="学校审核" width="40%"
+               @close="handleCloseUniversityReviewDialog">
       <el-form :model="universityReviewForm" label-width="100px">
         <el-form-item label="审核意见">
-          <el-input v-model="universityReviewForm.universityReviewComments" type="textarea" placeholder="请输入学校审核意见"></el-input>
+          <el-input v-model="universityReviewForm.universityReviewComments" type="textarea"
+                    placeholder="请输入学校审核意见"></el-input>
         </el-form-item>
         <el-form-item label="审核结果">
           <el-radio-group v-model="universityReviewForm.universityReviewResult">
@@ -195,11 +205,11 @@ export default {
       });
     },
     handleView(row) {
-      this.viewExchangeApplicationForm = { ...row };
+      this.viewExchangeApplicationForm = {...row};
       this.viewDialogVisible = true;
     },
     handleDelete(row) {
-      this.$confirm('确定删除该申请吗?', '删除确认', { type: 'warning' })
+      this.$confirm('确定删除该申请吗?', '删除确认', {type: 'warning'})
         .then(() => {
           deleteExchangeApplication(row.applicationId).then(() => {
             this.$message.success('删除成功');

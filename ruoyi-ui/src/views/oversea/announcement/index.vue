@@ -29,10 +29,18 @@
         <el-table-column label="结束时间" prop="endDate" align="center"></el-table-column>
         <el-table-column label="操作" align="center" width="300px">
           <template #default="{ row }">
-            <el-button type="text" icon="el-icon-paperclip" size="mini" @click="handleSubmitApplication(row)" v-hasPermi="['oversea:announcement:apply']">提交申请</el-button> <!-- 新增的按钮 -->
-            <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(row)" v-hasPermi="['oversea:announcement:view']">查看</el-button>
-            <el-button type="text" icon="el-icon-edit" size="mini" @click="handleEdit(row)" v-hasPermi="['oversea:announcement:update']">编辑</el-button>
-            <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(row)" v-hasPermi="['oversea:announcement:delete']">删除</el-button>
+            <el-button type="text" icon="el-icon-paperclip" size="mini" @click="handleSubmitApplication(row)"
+                       v-hasPermi="['oversea:announcement:apply']">提交申请
+            </el-button> <!-- 新增的按钮 -->
+            <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(row)"
+                       v-hasPermi="['oversea:announcement:view']">查看
+            </el-button>
+            <el-button type="text" icon="el-icon-edit" size="mini" @click="handleEdit(row)"
+                       v-hasPermi="['oversea:announcement:update']">编辑
+            </el-button>
+            <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(row)"
+                       v-hasPermi="['oversea:announcement:delete']">删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -67,10 +75,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="开始时间" prop="releaseDate">
-          <el-date-picker v-model="announcementForm.releaseDate" type="datetime" placeholder="选择发布时间"></el-date-picker>
+          <el-date-picker v-model="announcementForm.releaseDate" type="datetime"
+                          placeholder="选择发布时间"></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间" prop="endDate">
-          <el-date-picker v-model="announcementForm.endDate" type="datetime" placeholder="选择结束时间"></el-date-picker>
+          <el-date-picker v-model="announcementForm.endDate" type="datetime"
+                          placeholder="选择结束时间"></el-date-picker>
         </el-form-item>
         <el-form-item label="附件上传" prop="fileName">
           <FileUpload v-model="announcementForm.fileName"></FileUpload>
@@ -110,7 +120,8 @@
     </el-dialog>
 
     <!-- 提交申请对话框 -->
-    <el-dialog :visible.sync="applicationDialogVisible" title="提交申请" width="30%" @close="handleCloseApplicationDialog">
+    <el-dialog :visible.sync="applicationDialogVisible" title="提交申请" width="30%"
+               @close="handleCloseApplicationDialog">
       <el-form :model="applicationForm" label-width="100px" ref="applicationFormRef" :rules="applicationRules">
         <el-form-item label="交流专业" prop="major">
           <el-input v-model="applicationForm.major" placeholder="请输入交流专业"></el-input>
@@ -169,15 +180,15 @@ export default {
         announcementId: null, // 公告ID
       },
       applicationRules: {
-        exchangeTerm: [{ required: true, message: "请输入交流学期", trigger: "blur" }],
-        major: [{ required: true, message: "请输入交流专业", trigger: "blur" }],
+        exchangeTerm: [{required: true, message: "请输入交流学期", trigger: "blur"}],
+        major: [{required: true, message: "请输入交流专业", trigger: "blur"}],
       },
       rules: {
-        title: [{ required: true, message: "请输入公告标题", trigger: "blur" }],
-        content: [{ required: true, message: "请输入公告内容", trigger: "blur" }],
-        releaseDate: [{ required: true, message: "请选择发布时间", trigger: "change" }],
-        endDate: [{ required: true, message: "请选择结束时间", trigger: "change" }],
-        oeUniversityId: [{ required: true, message: "请选择境外高校", trigger: "change" }]  // 增加高校选择规则
+        title: [{required: true, message: "请输入公告标题", trigger: "blur"}],
+        content: [{required: true, message: "请输入公告内容", trigger: "blur"}],
+        releaseDate: [{required: true, message: "请选择发布时间", trigger: "change"}],
+        endDate: [{required: true, message: "请选择结束时间", trigger: "change"}],
+        oeUniversityId: [{required: true, message: "请选择境外高校", trigger: "change"}]  // 增加高校选择规则
       }
     };
   },
@@ -221,12 +232,12 @@ export default {
     handleEdit(row) {
       this.dialogTitle = "编辑公告";
       this.dialogButton = "更新";
-      this.announcementForm = { ...row };
+      this.announcementForm = {...row};
       this.dialogVisible = true;
     },
     // 删除公告
     handleDelete(row) {
-      this.$confirm("确定删除该公告吗？", "提示", { type: "warning" }).then(() => {
+      this.$confirm("确定删除该公告吗？", "提示", {type: "warning"}).then(() => {
         deleteAnnouncement(row.announcementId).then(() => {
           this.$message.success("删除成功");
           this.fetchAnnouncements();
@@ -235,7 +246,7 @@ export default {
     },
     // 查看公告详情
     handleView(row) {
-      this.viewAnnouncementForm = { ...row };
+      this.viewAnnouncementForm = {...row};
       this.viewDialogVisible = true;
     },
     // 提交表单
@@ -297,7 +308,7 @@ export default {
     // 关闭提交申请对话框
     handleCloseApplicationDialog() {
       this.applicationDialogVisible = false;
-      this.applicationForm = { exchangeTerm: "", announcementId: null }; // 重置表单
+      this.applicationForm = {exchangeTerm: "", announcementId: null}; // 重置表单
     },
   },
 };
