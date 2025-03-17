@@ -30,8 +30,8 @@
     </select>
 
     <insert id="addGrade" parameterType="OeGrade">
-        INSERT INTO oe_grade (grade_id, student_id, course_id, grade, semester, credit)
-        VALUES (#{gradeId}, #{studentId}, #{courseId}, #{grade}, #{semester}, #{credit})
+        INSERT INTO oe_grade ( student_id, course_id, grade, semester, credit)
+        VALUES (#{studentId}, #{courseId}, #{grade}, #{semester}, #{credit})
     </insert>
 
     <update id="updateGrade" parameterType="OeGrade">

@@ -1,6 +1,7 @@
 package com.ruoyi.oversea.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class OeGrade implements Serializable {
     /**
      * 成绩ID，主键
      */
-    @TableId(type = IdType.INPUT) // 由于DDL中未设置自增，这里设为手动输入
+    @TableId(type = IdType.AUTO)
     private Long gradeId;
 
     /**
@@ -35,9 +36,21 @@ public class OeGrade implements Serializable {
     private Long studentId;
 
     /**
+     * 学生姓名
+     */
+    @TableField(exist = false)
+    private String studentName;
+
+    /**
      * 课程ID
      */
     private Long courseId;
+
+    /**
+     * 课程名称
+     */
+    @TableField(exist = false)
+    private String courseName;
 
     /**
      * 成绩
