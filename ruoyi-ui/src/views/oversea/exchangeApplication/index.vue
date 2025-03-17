@@ -31,13 +31,13 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="250px">
         <template #default="{ row }">
-          <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(row)">查看</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(row)">删除</el-button>
+          <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(row)" v-hasPermi="['oversea:exchange:view']">查看</el-button>
+          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(row)" v-hasPermi="['oversea:exchange:delete']">删除</el-button>
           <el-button v-if="row.collegeReviewResult === 0" type="text" icon="el-icon-check" size="mini"
-                     @click="handleCollegeReview(row)">学院审核
+                     @click="handleCollegeReview(row)" v-hasPermi="['oversea:exchange:SUAudit']">学院审核
           </el-button>
           <el-button v-if="row.collegeReviewResult === 1 && row.universityReviewResult === 0" type="text"
-                     icon="el-icon-check" size="mini" @click="handleUniversityReview(row)">学校审核
+                     icon="el-icon-check" size="mini" @click="handleUniversityReview(row)" v-hasPermi="['oversea:exchange:UAudit']">学校审核
           </el-button>
         </template>
       </el-table-column>

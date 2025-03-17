@@ -28,16 +28,22 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="250px">
         <template #default="{ row }">
-          <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(row)">查看</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(row)">删除</el-button>
+          <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(row)"
+                     v-hasPermi="['oversea:reinstatement:view']">查看
+          </el-button>
+          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(row)"
+                     v-hasPermi="['oversea:reinstatement:delete']">删除
+          </el-button>
           <el-button v-if="row.collegeReviewResult === 0" type="text" icon="el-icon-check" size="mini"
-                     @click="handleCollegeReview(row)">学院审核
+                     @click="handleCollegeReview(row)" v-hasPermi="['oversea:reinstatement:SAudit']">学院审核
           </el-button>
           <el-button v-if="row.collegeReviewResult === 1 && row.universityReviewResult === 0" type="text"
-                     icon="el-icon-check" size="mini" @click="handleUniversityReview(row)">学校审核
+                     icon="el-icon-check" size="mini" @click="handleUniversityReview(row)"
+                     v-hasPermi="['oversea:reinstatement:UAudit']">学校审核
           </el-button>
           <el-button v-if="row.collegeReviewResult === 1 && row.universityReviewResult === 1" type="text"
-                     icon="el-icon-edit" size="mini" @click="handleCreditExchangeRequest(row)">学分置换申请
+                     icon="el-icon-edit" size="mini" @click="handleCreditExchangeRequest(row)"
+                     v-hasPermi="['oversea:reinstatement:apply']">学分置换申请
           </el-button>
         </template>
       </el-table-column>
@@ -141,7 +147,8 @@
     </el-dialog>
 
     <!-- 学分置换申请对话框 -->
-    <el-dialog :visible.sync="creditExchangeDialogVisible" title="学分置换申请" width="40%" @close="handleCloseCreditExchangeDialog">
+    <el-dialog :visible.sync="creditExchangeDialogVisible" title="学分置换申请" width="40%"
+               @close="handleCloseCreditExchangeDialog">
       <el-form :model="creditExchangeForm" label-width="100px">
         <el-form-item label="境外课程" prop="overseasCourseId">
           <el-select v-model="creditExchangeForm.overseasCourseId" placeholder="请选择境外课程" style="width: 100%">
@@ -177,8 +184,8 @@ import {
   updateCollegeReview,
   updateUniversityReview,
 } from '@/api/oversea/reinstatementApplication';
-import { addExchangeApplication } from "@/api/oversea/exchangeApplication";
-import { getCourseByRApplicationId } from "@/api/oversea/oeCourse";
+import {addExchangeApplication} from "@/api/oversea/exchangeApplication";
+import {getCourseByRApplicationId} from "@/api/oversea/oeCourse";
 
 export default {
   data() {
@@ -307,7 +314,7 @@ export default {
 
     // 提交学分置换申请
     handleSubmitCreditExchange() {
-      addExchangeApplication( this.creditExchangeForm)
+      addExchangeApplication(this.creditExchangeForm)
         .then(() => {
           this.$message.success('学分置换申请提交成功');
           this.creditExchangeDialogVisible = false;
