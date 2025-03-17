@@ -1,9 +1,11 @@
 package com.ruoyi.oversea.service.impl;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.oversea.domain.OeGrade;
 import com.ruoyi.oversea.mapper.OeGradeMapper;
 import com.ruoyi.oversea.service.OeCourseService;
 import com.ruoyi.oversea.service.OeGradeService;
+import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,14 +26,24 @@ public class OeGradeServiceImpl implements OeGradeService {
 
     private final OeCourseService oeCourseService;
 
+    private final ISysRoleService iSysRoleService;
+
     /**
      * 获取所有成绩信息
      */
     @Override
     public List<OeGrade> getAllGrades() {
-        List<OeGrade> allGrades = gradeMapper.getAllGrades();
-        fillGradeInfo(allGrades);
-        return allGrades;
+        Long userId = SecurityUtils.getUserId();
+        String role = iSysRoleService.selectStringRoleByUserId(userId);
+        if (role.equals("student")){
+            List<OeGrade> gradesByStudentId = gradeMapper.getGradesByStudentId(userId);
+            fillGradeInfo(gradesByStudentId);
+            return gradesByStudentId;
+        } else {
+            List<OeGrade> allGrades = gradeMapper.getAllGrades();
+            fillGradeInfo(allGrades);
+            return allGrades;
+        }
     }
 
     /**

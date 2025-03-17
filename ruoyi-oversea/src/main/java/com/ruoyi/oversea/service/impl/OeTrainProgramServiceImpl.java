@@ -3,6 +3,7 @@ package com.ruoyi.oversea.service.impl;
 import com.ruoyi.oversea.domain.OeTrainProgram;
 import com.ruoyi.oversea.mapper.OeTrainProgramMapper;
 import com.ruoyi.oversea.service.OeTrainProgramService;
+import com.ruoyi.system.service.ISysRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -4,6 +4,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.oversea.domain.ReinstatementApplication;
 import com.ruoyi.oversea.mapper.ReinstatementApplicationMapper;
 import com.ruoyi.oversea.service.ReinstatementApplicationService;
+import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class ReinstatementApplicationServiceImpl implements ReinstatementApplica
 
     private final ISysUserService iSysUserService;
 
+    private final ISysRoleService iSysRoleService;
+
     /**
      * 获取所有复学申请
      *
@@ -31,9 +34,17 @@ public class ReinstatementApplicationServiceImpl implements ReinstatementApplica
     @Transactional
     @Override
     public List<ReinstatementApplication> getAllReinstatementApplications() {
-        List<ReinstatementApplication> allApplications = reinstatementApplicationMapper.getAllReinstatementApplications();
-        fillReinstatementApplicationUserName(allApplications);
-        return allApplications;
+        Long userId = SecurityUtils.getUserId();
+        String role = iSysRoleService.selectStringRoleByUserId(userId);
+        if (role.equals("student")){
+            List<ReinstatementApplication> reinstatementApplicationsByUserId = reinstatementApplicationMapper.getReinstatementApplicationsByUserId(userId);
+            fillReinstatementApplicationUserName(reinstatementApplicationsByUserId);
+            return reinstatementApplicationsByUserId;
+        } else {
+            List<ReinstatementApplication> allApplications = reinstatementApplicationMapper.getAllReinstatementApplications();
+            fillReinstatementApplicationUserName(allApplications);
+            return allApplications;
+        }
     }
 
     /**

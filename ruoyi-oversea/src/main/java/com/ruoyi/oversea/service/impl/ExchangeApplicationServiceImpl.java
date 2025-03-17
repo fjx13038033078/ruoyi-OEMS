@@ -6,6 +6,7 @@ import com.ruoyi.oversea.domain.OeCourse;
 import com.ruoyi.oversea.mapper.ExchangeApplicationMapper;
 import com.ruoyi.oversea.service.ExchangeApplicationService;
 import com.ruoyi.oversea.service.OeCourseService;
+import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class ExchangeApplicationServiceImpl implements ExchangeApplicationServic
     private final ExchangeApplicationMapper exchangeApplicationMapper;
     private final ISysUserService iSysUserService;
     private final OeCourseService oeCourseService;
+    private final ISysRoleService iSysRoleService;
 
     /**
      * 获取所有学分置换申请
@@ -32,9 +34,17 @@ public class ExchangeApplicationServiceImpl implements ExchangeApplicationServic
     @Transactional
     @Override
     public List<ExchangeApplication> getAllExchangeApplications() {
-        List<ExchangeApplication> allApplications = exchangeApplicationMapper.getAllExchangeApplications();
-        fillExchangeApplicationUserName(allApplications);
-        return allApplications;
+        Long userId = SecurityUtils.getUserId();
+        String role = iSysRoleService.selectStringRoleByUserId(userId);
+        if (role.equals("student")){
+            List<ExchangeApplication> exchangeApplicationsByUserId = exchangeApplicationMapper.getExchangeApplicationsByUserId(userId);
+            fillExchangeApplicationUserName(exchangeApplicationsByUserId);
+            return exchangeApplicationsByUserId;
+        } else {
+            List<ExchangeApplication> allApplications = exchangeApplicationMapper.getAllExchangeApplications();
+            fillExchangeApplicationUserName(allApplications);
+            return allApplications;
+        }
     }
 
     /**

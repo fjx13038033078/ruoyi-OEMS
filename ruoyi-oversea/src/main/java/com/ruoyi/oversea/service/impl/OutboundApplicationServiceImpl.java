@@ -4,6 +4,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.oversea.domain.OutboundApplication;
 import com.ruoyi.oversea.mapper.OutboundApplicationMapper;
 import com.ruoyi.oversea.service.OutboundApplicationService;
+import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class OutboundApplicationServiceImpl implements OutboundApplicationServic
 
     private final AnnouncementServiceImpl announcementService;
 
+    private final ISysRoleService iSysRoleService;
+
     /**
      * 获取所有出境申请
      *
@@ -34,11 +37,21 @@ public class OutboundApplicationServiceImpl implements OutboundApplicationServic
     @Transactional
     @Override
     public List<OutboundApplication> getAllOutboundApplications() {
-        List<OutboundApplication> allApplications = outboundApplicationMapper.getAllOutboundApplications();
-        fillOutboundApplicationUserName(allApplications);
-        fillAnnouncementTitle(allApplications);
-        fillUniversityName(allApplications);
-        return allApplications;
+        Long userId = SecurityUtils.getUserId();
+        String role = iSysRoleService.selectStringRoleByUserId(userId);
+        if (role.equals("student")){
+            List<OutboundApplication> outboundApplicationsByUserId = outboundApplicationMapper.getOutboundApplicationsByUserId(userId);
+            fillOutboundApplicationUserName(outboundApplicationsByUserId);
+            fillAnnouncementTitle(outboundApplicationsByUserId);
+            fillUniversityName(outboundApplicationsByUserId);
+            return outboundApplicationsByUserId;
+        } else {
+            List<OutboundApplication> allApplications = outboundApplicationMapper.getAllOutboundApplications();
+            fillOutboundApplicationUserName(allApplications);
+            fillAnnouncementTitle(allApplications);
+            fillUniversityName(allApplications);
+            return allApplications;
+        }
     }
 
     /**
