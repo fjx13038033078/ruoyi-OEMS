@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.oversea.mapper.OeGradeMapper">
+
+    <resultMap type="OeGrade" id="GradeResult">
+        <id property="gradeId" column="grade_id"/>
+        <result property="studentId" column="student_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="grade" column="grade"/>
+        <result property="semester" column="semester"/>
+        <result property="credit" column="credit"/>
+    </resultMap>
+
+    <select id="getAllGrades" resultMap="GradeResult">
+        SELECT * FROM oe_grade
+    </select>
+
+    <select id="getGradeById" parameterType="Long" resultMap="GradeResult">
+        SELECT * FROM oe_grade WHERE grade_id = #{gradeId}
+    </select>
+
+    <select id="getGradesByStudentId" parameterType="Long" resultMap="GradeResult">
+        SELECT * FROM oe_grade WHERE student_id = #{studentId}
+    </select>
+
+    <select id="getGradesByCourseId" parameterType="Long" resultMap="GradeResult">
+        SELECT * FROM oe_grade WHERE course_id = #{courseId}
+    </select>
+
+    <insert id="addGrade" parameterType="OeGrade">
+        INSERT INTO oe_grade (grade_id, student_id, course_id, grade, semester, credit)
+        VALUES (#{gradeId}, #{studentId}, #{courseId}, #{grade}, #{semester}, #{credit})
+    </insert>
+
+    <update id="updateGrade" parameterType="OeGrade">
+        UPDATE oe_grade
+        SET student_id = #{studentId}, course_id = #{courseId}, grade = #{grade},
+            semester = #{semester}, credit = #{credit}
+        WHERE grade_id = #{gradeId}
+    </update>
+
+    <delete id="deleteGrade" parameterType="Long">
+        DELETE FROM oe_grade WHERE grade_id = #{gradeId}
+    </delete>
+
+</mapper>

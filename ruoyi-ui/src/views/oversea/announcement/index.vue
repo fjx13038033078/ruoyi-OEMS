@@ -29,7 +29,7 @@
         <el-table-column label="结束时间" prop="endDate" align="center"></el-table-column>
         <el-table-column label="操作" align="center" width="300px">
           <template #default="{ row }">
-            <el-button type="text" icon="el-icon-paperclip" size="mini" @click="handleSubmitApplication(row)">提交申请</el-button> <!-- 新增的按钮 -->
+            <el-button type="text" icon="el-icon-paperclip" size="mini" @click="handleSubmitApplication(row)" v-hasPermi="['oversea:announcement:apply']">提交申请</el-button> <!-- 新增的按钮 -->
             <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(row)" v-hasPermi="['oversea:announcement:view']">查看</el-button>
             <el-button type="text" icon="el-icon-edit" size="mini" @click="handleEdit(row)" v-hasPermi="['oversea:announcement:update']">编辑</el-button>
             <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(row)" v-hasPermi="['oversea:announcement:delete']">删除</el-button>
