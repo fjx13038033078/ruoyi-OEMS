@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.oversea.mapper.OeTrainProgramMapper">
+
+    <resultMap type="OeTrainProgram" id="TrainProgramResult">
+        <id property="id" column="id"/>
+        <result property="majorId" column="major_id"/>
+        <result property="courseName" column="course_name"/>
+        <result property="credit" column="credit"/>
+        <result property="property" column="property"/>
+    </resultMap>
+
+    <select id="getAllTrainPrograms" resultMap="TrainProgramResult">
+        SELECT * FROM oe_train_program
+    </select>
+
+    <select id="getTrainProgramById" parameterType="Long" resultMap="TrainProgramResult">
+        SELECT * FROM oe_train_program WHERE id = #{id}
+    </select>
+
+    <select id="getTrainProgramsByMajorId" parameterType="Long" resultMap="TrainProgramResult">
+        SELECT * FROM oe_train_program WHERE major_id = #{majorId}
+    </select>
+
+    <insert id="addTrainProgram" parameterType="OeTrainProgram">
+        INSERT INTO oe_train_program (major_id, course_name, credit, property)
+        VALUES (#{majorId}, #{courseName}, #{credit}, #{property})
+    </insert>
+
+    <update id="updateTrainProgram" parameterType="OeTrainProgram">
+        UPDATE oe_train_program
+        SET major_id = #{majorId}, course_name = #{courseName}, credit = #{credit}, property = #{property}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteTrainProgram" parameterType="Long">
+        DELETE FROM oe_train_program WHERE id = #{id}
+    </delete>
+
+</mapper>
