@@ -163,7 +163,14 @@
     <el-dialog :visible.sync="reinstatementDialogVisible" title="复学申请" @close="handleCloseReinstatementDialog">
       <el-form :model="reinstatementForm" label-width="80px">
         <el-form-item label="复学学期">
-          <el-input v-model="reinstatementForm.exchangeTerm" placeholder="请输入复学学期"></el-input>
+          <el-select v-model="reinstatementForm.exchangeTerm" placeholder="请选择复学学期">
+            <el-option
+              v-for="item in exchangeTermOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center;">
@@ -182,6 +189,7 @@ import {
   updateUniversityReview
 } from "@/api/oversea/outboundApplication";
 import {addReinstatementApplication} from "@/api/oversea/reinstatementApplication";
+import {exchangeTermOptions} from "@/api/oversea/exchangeTerm"; // 导入交流学期选项
 
 export default {
   data() {
@@ -218,6 +226,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
       },
+      exchangeTermOptions, // 添加交流学期选项
     };
   },
   created() {

@@ -127,7 +127,14 @@
           <el-input v-model="applicationForm.major" placeholder="请输入交流专业"></el-input>
         </el-form-item>
         <el-form-item label="交流学期" prop="exchangeTerm">
-          <el-input v-model="applicationForm.exchangeTerm" placeholder="请输入交流学期"></el-input>
+          <el-select v-model="applicationForm.exchangeTerm" placeholder="请选择交流学期">
+            <el-option
+              v-for="item in exchangeTermOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center;">
@@ -147,6 +154,7 @@ import {
 } from "@/api/oversea/announcement";
 import {listAllUniversities} from "@/api/oversea/university";
 import {addOutboundApplication} from "@/api/oversea/outboundApplication";
+import {exchangeTermOptions} from "@/api/oversea/exchangeTerm"; // 导入交流学期选项
 
 export default {
   data() {
@@ -180,7 +188,7 @@ export default {
         announcementId: null, // 公告ID
       },
       applicationRules: {
-        exchangeTerm: [{required: true, message: "请输入交流学期", trigger: "blur"}],
+        exchangeTerm: [{required: true, message: "请选择交流学期", trigger: "change"}],
         major: [{required: true, message: "请输入交流专业", trigger: "blur"}],
       },
       rules: {
@@ -189,7 +197,8 @@ export default {
         releaseDate: [{required: true, message: "请选择发布时间", trigger: "change"}],
         endDate: [{required: true, message: "请选择结束时间", trigger: "change"}],
         oeUniversityId: [{required: true, message: "请选择境外高校", trigger: "change"}]  // 增加高校选择规则
-      }
+      },
+      exchangeTermOptions, // 添加交流学期选项
     };
   },
   created() {
